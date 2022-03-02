@@ -3,6 +3,7 @@ from unicodedata import name
 from .models import Books
 # from . import app
 import falcon
+from sqlobject import SQLObjectNotFound
 
 
 class Resource:
@@ -40,9 +41,42 @@ class Book:
 
 class OneBook:
     def on_get(self, req, resp, book_id):
-        resp.text = json.dumps({'book': Books.select(book_id)[0].get_dict()})
+        try:
+            book = Books.get(book_id)
+        except SQLObjectNotFound:
+            raise falcon.HTTPBadRequest(title='Wrong book id',
+            description='Please provide valid book id to get info')
+        book = book.get_dict()
+        resp.text = json.dumps({'book': book})
         resp.status = falcon.HTTP_200
-
+    
+    def on_put(self, req, resp, book_id):
+        try:
+            book = Books.get(book_id)
+        except SQLObjectNotFound:
+            raise falcon.HTTPBadRequest(title='Wrong book id',
+            description='Please provide valid book id to get info')
+        book = book.get_dict()
+        request = json.loads(req.stream.read())
+        for k, v in request.items():
+            book[k] = v
+        Books.get(book_id).set(name=book['name'], author=book['author'], rent=book['rent'])
+            
+        resp.text = json.dumps({'book': book})
+        resp.status = falcon.HTTP_200
+    
+    def on_delete(self, req, resp, book_id):
+        try:
+            book = Books.get(book_id)
+        except SQLObjectNotFound:
+            raise falcon.HTTPBadRequest(title='Wrong book id',
+            description='Please provide valid book id to get info')
+        Books.delete(book_id)
+        result = []
+        for book in Books.select():
+            result.append(book.get_dict())
+        resp.text = json.dumps({'books': result})
+        resp.status = falcon.HTTP_200
 
 # app.add_route('/images', Resource())
 # app.add_route('/api/v1/books', Book())
