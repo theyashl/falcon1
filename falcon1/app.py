@@ -1,8 +1,13 @@
 import falcon
-from .images import Resource, Book, OneBook
 
-app = application = falcon.App()
+from .middlewares import AuthMiddleware, VersioningComonent
+from .images import Authors, Login, Resource, Books
+
+app = application = falcon.App(middleware=AuthMiddleware())
 
 app.add_route('/images', Resource())
-app.add_route('/books', Book())
-app.add_route('/books/{book_id}', OneBook())
+app.add_route('/books', Books())
+app.add_route('/books/{book_id}', Books(), suffix="book")
+app.add_route('/authors', Authors())
+app.add_route('/authors/{author_id}', Authors(), suffix="author")
+app.add_route('/login', Login())
