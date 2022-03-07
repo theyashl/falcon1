@@ -1,55 +1,36 @@
-import json
-from falcon1.Models.AuthorModel import Author
+from falcon1.Resources.Versions.V1.Author import Author as V1
+from falcon1.Resources.Versions.V2.Author import Author as V2
 import falcon
-from sqlobject import SQLObjectNotFound, IN
+from falcon1.Hooks.VersionParameter import ValidateParameter
 
+
+@falcon.before(ValidateParameter.validate_version, ['V1', 'V2'])
 class Authors:
-    def on_get(self, req, resp):
-        result = []
-        for author in Author.select():
-            result.append(author.get_dict())
-        resp.media = {'Authors': result}
-        resp.status = falcon.HTTP_200
+    def on_get(self, req, resp, version):
+        if version == 'V1':
+            V1.on_get(req, resp)
+        elif version == 'V2':
+            V2.on_get(req, resp)
+    def on_get_author(self, req, resp, version, author_id):
+        if version == 'V1':
+            V1.on_get_author(req, resp, author_id)
+        elif version == 'V2':
+            V2.on_get_author(req, resp, author_id)
 
-    def on_get_author(self, req, resp, author_id):
-        try:
-            author = Author.get(author_id)
-        except SQLObjectNotFound:
-            raise falcon.HTTPBadRequest(title='Wrong author id',
-            description='Please provide valid author id to get info')
-        author = author.get_dict()
-        resp.media = {'author': author}
-        resp.status = falcon.HTTP_200
+    def on_post(self, req, resp, version):
+        if version == 'V1':
+            V1.on_post(req, resp)
+        elif version == 'V2':
+            V2.on_post(req, resp)
 
-    def on_post(self, req, resp):
-        request = json.loads(req.stream.read())
-        author = Author(name=request["name"])
-        resp.media = author.get_dict()
-        resp.status = falcon.HTTP_200
-
-    def on_put_author(self, req, resp, author_id):
-        try:
-            author = Author.get(author_id)
-        except SQLObjectNotFound:
-            raise falcon.HTTPBadRequest(title='Wrong author id',
-            description='Please provide valid author id to get info')
-        author = author.get_dict()
-        request = json.loads(req.stream.read())
-        for k, v in request.items():
-            author[k] = v
-        Author.get(author_id).set(name=author['name'])
-            
-        resp.media = {'author': author}
-        resp.status = falcon.HTTP_200
+    def on_put_author(self, req, resp, version, author_id):
+        if version == 'V1':
+            V1.on_put_author(req, resp, author_id)
+        elif version == 'V2':
+            V1.on_put_author(req, resp, author_id)
     
-    def on_delete_author(self, req, resp, author_id):
-        try:
-            Author.delete(author_id)
-        except SQLObjectNotFound:
-            raise falcon.HTTPBadRequest(title='Wrong author id',
-            description='Please provide valid author id to get info')
-        result = []
-        for author in Author.select():
-            result.append(author.get_dict())
-        resp.media = {'Authors': result}
-        resp.status = falcon.HTTP_200
+    def on_delete_author(self, req, resp, version, author_id):
+        if version == 'V1':
+            V1.on_delete_author(req, resp, author_id)
+        elif version == 'V2':
+            V1.on_delete_author(req, resp, author_id)

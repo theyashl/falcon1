@@ -6,7 +6,7 @@ from sqlobject import SQLObjectNotFound
 class AuthMiddleware:
 
     def process_request(self, req, resp):
-        if req.path == "/login":
+        if "/login" in req.path:
             return
         token = req.get_header('Authorization')
 
