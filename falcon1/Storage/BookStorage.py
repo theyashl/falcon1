@@ -1,13 +1,18 @@
 import falcon
 from falcon1.Models.BookModel import Book as BookModel
 from falcon1.Models.AuthorModel import Author as AuthorModel
-from sqlobject import LIKE, IN, SQLObjectNotFound
+from sqlobject import LIKE, IN, SQLObjectNotFound, AND
+from sqlobject.sqlbuilder import INNERJOINOn
 
 
 class BookStorage:
     def get_book_storage(self, book_id=None, name='', author=''):
         if book_id is None:
-            return BookModel.select(LIKE(BookModel.q.name, "%"+name+"%")).filter(IN(BookModel.q.author, AuthorModel.select(LIKE(AuthorModel.q.name, "%"+author+"%"))))
+            # return BookModel.select(LIKE(BookModel.q.name, "%"+name+"%")).filter(IN(BookModel.q.author, AuthorModel.select(LIKE(AuthorModel.q.name, "%"+author+"%"))))
+            # return BookModel.select(AND(LIKE(BookModel.q.name, "%"+name+"%"), AND(BookModel.q.authorID == AuthorModel.q.id,
+            #                                                                         LIKE(AuthorModel.q.name, "%"+author+"%"))))
+            return BookModel.select(AND(LIKE(BookModel.q.name, "%"+name+"%"), LIKE(AuthorModel.q.name, "%"+author+"%")),
+                                        join=INNERJOINOn(BookModel, AuthorModel, BookModel.q.authorID == AuthorModel.q.id))
         else:
             try:
                 return BookModel.get(book_id)

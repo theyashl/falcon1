@@ -1,0 +1,9 @@
+falcon==3.0.1
+FormEncode==2.0.1
+gunicorn==20.1.0
+mysqlclient==2.1.0
+PyDispatcher==2.0.5
+PyJWT==2.3.0
+six==1.16.0
+SQLObject==3.9.1
+mysql-connector-python

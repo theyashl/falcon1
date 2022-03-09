@@ -1,6 +1,5 @@
 from sqlobject import *
 from falcon1 import conn
-from falcon1.Models.BookModel import Book
 
 
 class Author(SQLObject):
@@ -16,3 +15,4 @@ class Author(SQLObject):
         }
 
 Author.createTable(ifNotExists=True)
+from falcon1.Models.BookModel import Book

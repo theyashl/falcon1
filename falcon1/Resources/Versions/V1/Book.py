@@ -26,7 +26,7 @@ class Book:
     
     def on_post(req, resp):
         request = json.loads(req.stream.read())
-        resp.media = BookStorage().create_book_storage(request)
+        resp.media = BookStorage.create_book_storage(request)
         resp.status = falcon.HTTP_200
 
     def on_put_book(req, resp, book_id):
