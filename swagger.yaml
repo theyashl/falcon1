@@ -1,0 +1,300 @@
+openapi: 3.0.0
+info:
+  title: Book Library
+  version: "1.0"
+servers:
+- url: http://127.0.0.1
+paths:
+  /v1/books:
+    get:
+      summary: Get Books in Library List
+      description: Returns list of information about all Books present in Library
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                item:
+                  type: object
+                  $ref: #/components/schemas/Book
+        "401":
+          description: INVALID_AUTH
+        "500":
+          description: INTERNAL_ERROR
+    post:
+      summary: Add a new Book
+      description: Add a new Book to Library
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                author:
+                  type: integer
+                rent:
+                  type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: #/components/schemas/Book
+        "401":
+          description: INVALID_AUTH
+        "500":
+          description: INTERNAL_ERROR
+
+  /v1/books/{book_id}:
+    parameters:
+      - name: book_id
+        in: path
+        required: true
+        description: ID of Book
+        schema:
+          type : integer
+          format: int64
+          minimum: 1
+    get:
+      summary: Get Book from Library by ID
+      description: Returns information about Book present in Library having mentioned ID
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: #/components/schemas/Book
+        "401":
+          description: INVALID_AUTH
+        "500":
+          description: INTERNAL_ERROR
+    put:
+      summary: Update a Book by ID
+      description: Update a Book present in Library having mentioned ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  required: false
+                rent:
+                  type: integer
+                  required: false
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: #/components/schemas/Book
+        "401":
+          description: INVALID_AUTH
+        "500":
+          description: INTERNAL_ERROR
+    delete:
+      summary: Delete a Book in Library by ID
+      description: Delete a Book present in Library by mentioned ID
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                item:
+                  type: object
+                  $ref: #/components/schemas/Book
+        "401":
+          description: INVALID_AUTH
+        "500":
+          description: INTERNAL_ERROR
+
+  /v1/authors:
+    get:
+      summary: Get Authors in Library List
+      description: Returns list of information about all Authors present in Library
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                item:
+                  type: object
+                  $ref: #/components/schemas/Author
+        "401":
+          description: INVALID_AUTH
+        "500":
+          description: INTERNAL_ERROR
+    post:
+      summary: Add a new Author
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: #/components/schemas/Author
+        "401":
+          description: INVALID_AUTH
+        "500":
+          description: INTERNAL_ERROR
+
+  /v1/authors/{author_id}:
+    parameters:
+      - name: author_id
+        in: path
+        required: true
+        description: ID of Author
+        schema:
+          type : integer
+          format: int64
+          minimum: 1
+    get:
+      summary: Get Author from Library by ID
+      description: Returns information about Author present in Library having mentioned ID
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: #/components/schemas/Author
+        "401":
+          description: INVALID_AUTH
+        "500":
+          description: INTERNAL_ERROR
+    put:
+      summary: Update a Author by ID
+      description: Update a Author present in Library having mentioned ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  required: false
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: #/components/schemas/Author
+        "401":
+          description: INVALID_AUTH
+        "500":
+          description: INTERNAL_ERROR
+    delete:
+      summary: Delete an Author in Library by ID
+      description: Delete an Author present in Library by mentioned ID
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                item:
+                  type: object
+                  $ref: #/components/schemas/Author
+        "401":
+          description: INVALID_AUTH
+        "500":
+          description: INTERNAL_ERROR
+
+  /v1/login:
+    post:
+      summary: Login for Librarian
+      description: Login a Librarian in Library with valid credentials
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        "401":
+          description: INVALID_AUTH
+        "500":
+          description: INTERNAL_ERROR
+
+
+components:
+  schemas:
+    Book:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 4
+        name:
+          type: string
+          example: Welcome
+        author:
+          type: string
+          example: Jake
+        rent:
+          type: integer
+          format: int64
+          example: 50
+    Author:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 4
+        name:
+          type: string
+          example: Jake
+        books:
+          type: array
+          item:
+            type: string
+            example: Welcome
