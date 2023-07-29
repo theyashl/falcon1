@@ -5,7 +5,7 @@ info:
 servers:
 - url: http://127.0.0.1
 paths:
-  /v1/books:
+  /V1/books:
     get:
       summary: Get Books in Library List
       description: Returns list of information about all Books present in Library
@@ -16,9 +16,8 @@ paths:
             application/json:
               schema:
                 type: array
-                item:
-                  type: object
-                  $ref: #/components/schemas/Book
+                items:
+                  $ref: "#/components/schemas/Book"
         "401":
           description: INVALID_AUTH
         "500":
@@ -45,14 +44,13 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                $ref: #/components/schemas/Book
+                $ref: "#/components/schemas/Book"
         "401":
           description: INVALID_AUTH
         "500":
           description: INTERNAL_ERROR
 
-  /v1/books/{book_id}:
+  /V1/books/{book_id}:
     parameters:
       - name: book_id
         in: path
@@ -71,8 +69,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                $ref: #/components/schemas/Book
+                $ref: "#/components/schemas/Book"
         "401":
           description: INVALID_AUTH
         "500":
@@ -89,18 +86,15 @@ paths:
               properties:
                 name:
                   type: string
-                  required: false
                 rent:
                   type: integer
-                  required: false
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                type: object
-                $ref: #/components/schemas/Book
+                $ref: "#/components/schemas/Book"
         "401":
           description: INVALID_AUTH
         "500":
@@ -115,15 +109,14 @@ paths:
             application/json:
               schema:
                 type: array
-                item:
-                  type: object
-                  $ref: #/components/schemas/Book
+                items:
+                  $ref: "#/components/schemas/Book"
         "401":
           description: INVALID_AUTH
         "500":
           description: INTERNAL_ERROR
 
-  /v1/authors:
+  /V1/authors:
     get:
       summary: Get Authors in Library List
       description: Returns list of information about all Authors present in Library
@@ -134,9 +127,8 @@ paths:
             application/json:
               schema:
                 type: array
-                item:
-                  type: object
-                  $ref: #/components/schemas/Author
+                items:
+                  $ref: "#/components/schemas/Author"
         "401":
           description: INVALID_AUTH
         "500":
@@ -158,14 +150,13 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                $ref: #/components/schemas/Author
+                $ref: "#/components/schemas/Author"
         "401":
           description: INVALID_AUTH
         "500":
           description: INTERNAL_ERROR
 
-  /v1/authors/{author_id}:
+  /V1/authors/{author_id}:
     parameters:
       - name: author_id
         in: path
@@ -184,8 +175,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                $ref: #/components/schemas/Author
+                $ref: "#/components/schemas/Author"
         "401":
           description: INVALID_AUTH
         "500":
@@ -202,15 +192,13 @@ paths:
               properties:
                 name:
                   type: string
-                  required: false
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                type: object
-                $ref: #/components/schemas/Author
+                $ref: "#/components/schemas/Author"
         "401":
           description: INVALID_AUTH
         "500":
@@ -225,15 +213,14 @@ paths:
             application/json:
               schema:
                 type: array
-                item:
-                  type: object
-                  $ref: #/components/schemas/Author
+                items:
+                  $ref: "#/components/schemas/Author"
         "401":
           description: INVALID_AUTH
         "500":
           description: INTERNAL_ERROR
 
-  /v1/login:
+  /V1/login:
     post:
       summary: Login for Librarian
       description: Login a Librarian in Library with valid credentials
@@ -295,6 +282,6 @@ components:
           example: Jake
         books:
           type: array
-          item:
+          items:
             type: string
             example: Welcome
