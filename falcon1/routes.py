@@ -4,10 +4,11 @@ from falcon1.Resources.BookResources import Books
 from falcon1.Resources.LoginResources import Login
 from falcon1.Middleware.AuthMiddleware import AuthMiddleware
 from falcon1.Middleware.ResponseMiddleware import ResponseMiddleware
+from falcon1.Middleware.ContextMiddleware import RequestIDMiddleware
 from .images import Resource
 
 def get_app():
-    app = falcon.App(middleware=[AuthMiddleware(), ResponseMiddleware()])
+    app = falcon.App(middleware=[RequestIDMiddleware(), AuthMiddleware(), ResponseMiddleware()])
 
     app.add_route('/images', Resource())
     app.add_route('/{version}/books', Books())

@@ -7,3 +7,4 @@ PyJWT==2.3.0
 six==1.16.0
 SQLObject==3.9.1
 mysql-connector-python
+clickhouse-connect
