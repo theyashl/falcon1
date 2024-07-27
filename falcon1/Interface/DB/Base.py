@@ -35,13 +35,14 @@ class DBAPI(ABC):
         subclass = cls._registry[db_type]
         return super().__new__(subclass)
     
-    def __init__(self, db_type, host, port, user, password, db) -> None:
+    def __init__(self, db_type, host, port, user, password, db, **kwargs) -> None:
         self.db_type = db_type
         self.host = host
         self.port = port
         self.user = user
         self.password = password
         self.db = db
+        self.kwargs = kwargs
 
     @abstractmethod
     def connect(self):
