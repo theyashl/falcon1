@@ -5,6 +5,7 @@ import time
 from typing import Callable, Iterable, Mapping
 
 from falcon1.Interface.DB.Base import *
+from falcon1.Utils.ConfigUtils import mysql_configs, clickhouse_configs
 
 
 def exponential_backoff(
@@ -60,8 +61,8 @@ def make_db_connection(db_type: DBType):
     if db_type == DBType.MYSQL:
         # MySQL Connection
         mysql_api = DBAPI(
-            db_type=DBType.MYSQL, host="mysql", port=3306,
-            user="roci", password="roci-root", db="falcon1"
+            db_type=DBType.MYSQL, host=mysql_configs.MYSQL_HOST, port=mysql_configs.MYSQL_PORT,
+            user=mysql_configs.MYSQL_USER, password=mysql_configs.MYSQL_PASSWORD, db=mysql_configs.MYSQL_DATABASE
         )
         mysql_conn = exponential_backoff(mysql_api.connect)
         return mysql_conn
@@ -69,8 +70,9 @@ def make_db_connection(db_type: DBType):
     elif db_type == DBType.CLICKHOUSE:
         # ClickHouse Connection
         clickhouse_api = DBAPI(
-            db_type=DBType.CLICKHOUSE, host="clickhouse", port=8443,
-            user="default", password="roci", db="default"
+            db_type=DBType.CLICKHOUSE, host=clickhouse_configs.CLICKHOUSE_HOST, port=clickhouse_configs.CLICKHOUSE_PORT,
+            user=clickhouse_configs.CLICKHOUSE_USER, password=clickhouse_configs.CLICKHOUSE_PASSWORD,
+            db=clickhouse_configs.CLICKHOUSE_DB
         )
         clickhouse_conn = exponential_backoff(clickhouse_api.connect)
         clickhouse_api.create_tables(CLICKHOUSE_TABLES["TRANSACTIONS"])  # create clickhouse tables
