@@ -4,6 +4,7 @@ MySQL engine implementation
 from falcon1.Interface.DB.Base import DBAPI, DBType
 from sqlobject.mysql import builder
 
+
 class MySQLAPI(DBAPI, db_type=DBType.MYSQL):
     def __init__(self, db_type, host, port, user, password, db, **kwargs) -> None:
         super().__init__(db_type, host, port, user, password, db, **kwargs)
@@ -12,7 +13,8 @@ class MySQLAPI(DBAPI, db_type=DBType.MYSQL):
         conn = builder()(
             user=self.user, password=self.password, host=self.host, db=self.db, **self.kwargs
         )
+        self._set_global_connection(conn)
         return conn
-    
-    def create_tables(self):
-        return super().create_tables()
+
+    def create_tables(self, *args, **kwargs):
+        return super().create_tables(*args, **kwargs)

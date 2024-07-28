@@ -1,6 +1,6 @@
 from uuid import uuid4
 import threading
-from falcon1 import clickhouse_conn
+from falcon1.Interface.DB.Base import DBAPI, DBType
 from datetime import datetime
 
 
@@ -38,6 +38,8 @@ class RequestIDMiddleware:
             req.context.request_id, req.context.external_request_id, req.method,
             path, req.context.start_time, request_end_time, resp.status
         ]
+
+        clickhouse_conn = DBAPI.get_connection(DBType.CLICKHOUSE)
         clickhouse_conn.insert("transactions", [data], column_names=[
             'request_id', 'external_request_id', 'http_method', 'path',
             'start_time', 'end_time', 'http_status'

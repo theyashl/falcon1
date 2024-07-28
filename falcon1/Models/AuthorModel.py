@@ -1,9 +1,7 @@
 from sqlobject import *
-from falcon1 import conn
 
 
 class Author(SQLObject):
-    _connection = conn
     name = StringCol(length=30, notNone=True)
     books = MultipleJoin('Book')
 
